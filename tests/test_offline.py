@@ -147,6 +147,16 @@ class Pipeline(unittest.TestCase):
         self.assertIn("based in Ahmedabad", subj); self.assertIn("Hello Bolt Software team", body)
         self.assertTrue(os.path.exists(mailer.draft_path(app.drafts, rows["Initech"])))   # manual leads get a draft to paste
 
+        # --redo rewrites unsent drafts from the current templates and clears approval
+        rows["Globex"]["approved"] = "yes"
+        app.cfg["templates"]["global_body"] = "Short note for {company}."
+        app.draft()                                           # plain draft never overwrites
+        self.assertIn("remotive.com", mailer.read_draft(app.drafts, rows["Globex"])[1])
+        app.draft(redo=True)
+        self.assertEqual(mailer.read_draft(app.drafts, rows["Globex"])[1].strip(), "Short note for Globex.")
+        self.assertEqual((rows["Globex"]["approved"], rows["Globex"]["status"]), ("", "drafted"))
+        app.cfg["templates"]["global_body"] = "Body {job_url}"; app.draft(redo=True)
+
     def test_3_send_respects_approval_and_limit(self):
         app = self.app()
         app.send(live=True)                                   # nothing approved -> nothing sent

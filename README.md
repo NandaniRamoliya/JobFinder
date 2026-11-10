@@ -20,7 +20,7 @@ from your own mailbox with your resume attached. Python 3.11+, no installs neede
 |---|---|---|
 | 1 | `python jobreach.py find` | Collects companies into `leads.csv` (`--scope local` / `global` for one side only) |
 | 2 | `python jobreach.py enrich` | Reads each company's contact/careers page for a published e-mail |
-| 3 | `python jobreach.py draft` | Writes one message per company to `drafts/L0001.txt` … |
+| 3 | `python jobreach.py draft` | Writes one message per company to `drafts/L0001.txt` …. After changing the templates, `draft --redo` rewrites every unsent draft |
 | 4 | *you* | Open `leads.csv`, read/edit the drafts, type `yes` in `approved` |
 | 5 | `python jobreach.py send --test` | Sends the first approved draft to yourself |
 | 6 | `python jobreach.py send --live` | Sends approved drafts (daily cap, random pauses). Without `--live` it only previews |

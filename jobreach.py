@@ -4,6 +4,7 @@
     python jobreach.py find            # 1. collect companies (local + global)
     python jobreach.py enrich          # 2. find a public contact e-mail for each
     python jobreach.py draft           # 3. write a personalised message per company -> drafts/
+                                       #    (draft --redo rewrites unsent drafts after you change the templates)
        ... open leads.csv, read drafts/, type "yes" in the `approved` column ...
     python jobreach.py send            # 4. preview what would go out
     python jobreach.py send --live     #    actually send (approved rows only, daily cap, spaced out)
@@ -99,10 +100,14 @@ class App:
                 "city": self.cfg["local"]["location"].split(",")[0].strip(),
                 "job_title": lead["job_title"] or me["role"]}
 
-    def draft(self):
+    def draft(self, redo=False):
+        """Write one draft per company. redo=True rewrites every unsent draft after you change the templates."""
         t, n = self.cfg["templates"], 0
         for r in self.store.rows:
-            if r["status"] not in ("ready", "manual") or os.path.exists(mailer.draft_path(self.drafts, r)):
+            exists = os.path.exists(mailer.draft_path(self.drafts, r))
+            if redo and r["status"] in ("drafted", "manual") and exists:
+                r["approved"] = ""  # the text changed, so it needs your approval again
+            elif r["status"] not in ("ready", "manual") or exists:
                 continue
             kind = "local" if r["scope"] == "local" else "global"
             ctx = self._context(r)
@@ -204,8 +209,9 @@ def main(argv=None):
     p.add_argument("--config", default="config.toml")
     sub = p.add_subparsers(dest="cmd", required=True)
     sub.add_parser("find").add_argument("--scope", choices=["all", "local", "global"], default="all")
-    for name in ("enrich", "draft", "replies", "status"):
+    for name in ("enrich", "replies", "status"):
         sub.add_parser(name)
+    sub.add_parser("draft").add_argument("--redo", action="store_true", help="rewrite all unsent drafts from the current templates")
     s = sub.add_parser("send")
     s.add_argument("--live", action="store_true", help="really send (default is a preview)")
     s.add_argument("--test", action="store_true", help="send the first approved draft to yourself")
@@ -218,6 +224,8 @@ def main(argv=None):
         app.send(a.live, a.test)
     elif a.cmd == "followup":
         app.followup(a.live)
+    elif a.cmd == "draft":
+        app.draft(a.redo)
     else:
         getattr(app, a.cmd)()
 
