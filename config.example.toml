@@ -1,0 +1,96 @@
+# Copy this file to config.toml and fill it in. Put your resume next to it.
+
+[me]
+name = "Your Name"
+email = "you@gmail.com"                 # messages are sent FROM this mailbox
+phone = "+91 90000 00000"
+role = "Software Developer"             # how you describe yourself in one or two words
+pitch = "I have 2 years of experience building web applications with React and Node.js."
+skills = ["JavaScript", "React", "Node.js", "Python", "SQL"]
+highlights = """
+- Built <project> used by <N> users, cutting <metric> by <X>%
+- <Second concrete result with a number in it>
+"""
+links = "linkedin.com/in/your-profile | github.com/your-handle"
+resume = "resume.pdf"
+
+[local]
+location = "Ahmedabad, India"           # city / area you live in ("near me")
+radius_km = 15
+# lat = 23.0225                         # optional: exact coordinates instead of the place name
+# lon = 72.5714
+# Optional better coverage: set the GOOGLE_MAPS_API_KEY environment variable and these searches are used too.
+google_queries = ["software company", "IT company", "web development company", "IT services"]
+
+[global]
+keywords = ["react", "node", "javascript", "python"]   # matched against job titles and tags
+exclude_title = ["senior", "staff", "principal", "lead", "manager"]  # remove levels you are not targeting
+sources = ["remotive", "remoteok", "arbeitnow", "jobicy", "hn"]
+max_age_days = 30
+match_description = false               # true = also match keywords in the full job text (more, noisier results)
+
+[send]
+smtp_host = "smtp.gmail.com"
+smtp_port = 587
+smtp_security = "starttls"              # starttls | ssl | none
+imap_host = "imap.gmail.com"            # used by `replies`
+daily_limit = 20                        # keep this low: a new sender blasting 100s/day lands in spam
+min_gap_seconds = 60                    # random pause between messages
+max_gap_seconds = 180
+followup_after_days = 7                 # one follow-up, then stop
+# Password is NOT stored here. Set the JOBREACH_SMTP_PASSWORD environment variable
+# (Gmail: turn on 2-Step Verification, then create an "App password").
+
+[templates]
+# Placeholders: {company} {city} {job_title} {job_url} {source} {distance_km}
+#               {name} {role} {pitch} {skills} {highlights} {phone} {my_email} {links}
+
+local_subject = "{role} based in {city} - interested in working with {company}"
+local_body = """
+Hello {company} team,
+
+I'm {name}, a {role} based in {city}. {pitch}
+
+I came across {company} while looking at technology companies near me, and I'm writing to ask whether you have, or expect to have, an opening where I could contribute. My core skills are {skills}.
+
+{highlights}
+
+My resume is attached. Since I'm local, I'd be glad to come by for a short conversation, or to complete a small technical task - whichever is easier for you.
+
+If this isn't the right inbox, I'd be grateful if you could point me to the right person. If nothing suitable is open right now, no reply is needed.
+
+Thank you for your time,
+{name}
+{phone} | {my_email}
+{links}
+"""
+
+global_subject = "Application: {job_title} - {name}"
+global_body = """
+Hello {company} team,
+
+I'm {name}, a {role}, and I'm applying for your {job_title} opening ({job_url}). {pitch}
+
+What I'd bring: {skills}.
+
+{highlights}
+
+I'm based in {city}, comfortable working remotely and asynchronously, and can overlap with your team's working hours. My resume is attached, and I'm happy to do a technical exercise or a call at a time that suits you.
+
+Thank you for considering my application,
+{name}
+{phone} | {my_email}
+{links}
+"""
+
+followup_body = """
+Hello {company} team,
+
+I wrote recently about working with {company} as a {job_title} and wanted to follow up briefly in case my message was missed. My resume is attached again for convenience.
+
+I'd welcome a short conversation if there's a fit - and if not, no problem at all; I won't write again.
+
+Best regards,
+{name}
+{phone} | {my_email}
+"""

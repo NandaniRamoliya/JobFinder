@@ -426,3 +426,13 @@ FodyWeavers.xsd
 
 # Official VS Code C# Dev Kit Extension exclusion
 #*.lscache
+
+## jobreach: personal data - never commit
+config.toml
+leads.csv
+leads.csv.tmp
+drafts/
+resume.*
+*.pdf
+__pycache__/
+*.pyc
